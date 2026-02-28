@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Heart, MessageCircle, Repeat2, ArrowBigUp, ArrowBigDown, Share, MoreHorizontal, Shield } from "lucide-react";
 import { Post } from "@/data/mockData";
 
@@ -8,6 +9,7 @@ interface PostCardProps {
 }
 
 const PostCard = ({ post, style }: PostCardProps) => {
+  const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isUpvoted, setIsUpvoted] = useState(post.isUpvoted);
   const [isDownvoted, setIsDownvoted] = useState(post.isDownvoted);
@@ -15,25 +17,22 @@ const PostCard = ({ post, style }: PostCardProps) => {
   const [upvotes, setUpvotes] = useState(post.upvotes);
   const [downvotes, setDownvotes] = useState(post.downvotes);
 
-  const handleLike = () => {
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setLikes((l) => (isLiked ? l - 1 : l + 1));
     setIsLiked(!isLiked);
   };
 
-  const handleUpvote = () => {
-    if (isDownvoted) {
-      setDownvotes((d) => d - 1);
-      setIsDownvoted(false);
-    }
+  const handleUpvote = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isDownvoted) { setDownvotes((d) => d - 1); setIsDownvoted(false); }
     setUpvotes((u) => (isUpvoted ? u - 1 : u + 1));
     setIsUpvoted(!isUpvoted);
   };
 
-  const handleDownvote = () => {
-    if (isUpvoted) {
-      setUpvotes((u) => u - 1);
-      setIsUpvoted(false);
-    }
+  const handleDownvote = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isUpvoted) { setUpvotes((u) => u - 1); setIsUpvoted(false); }
     setDownvotes((d) => (isDownvoted ? d - 1 : d + 1));
     setIsDownvoted(!isDownvoted);
   };
@@ -50,10 +49,20 @@ const PostCard = ({ post, style }: PostCardProps) => {
     post: "",
   };
 
+  const handlePostClick = () => {
+    navigate(`/post/${post.id}`);
+  };
+
+  const handleCommunityClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (post.communityId) navigate(`/community/${post.communityId}`);
+  };
+
   return (
     <article
       className="border-b border-border px-4 py-4 hover:bg-card-hover transition-colors cursor-pointer"
       style={style}
+      onClick={handlePostClick}
     >
       <div className="flex gap-3">
         {/* Avatar */}
@@ -71,21 +80,16 @@ const PostCard = ({ post, style }: PostCardProps) => {
           {/* Header */}
           <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="font-semibold text-foreground truncate text-sm">
-                {post.author.name}
-              </span>
-              {post.author.isAnonymous && (
-                <Shield size={14} className="text-accent flex-shrink-0" />
-              )}
-              <span className="text-muted-foreground text-sm truncate">
-                {post.author.handle}
-              </span>
+              <span className="font-semibold text-foreground truncate text-sm">{post.author.name}</span>
+              {post.author.isAnonymous && <Shield size={14} className="text-accent flex-shrink-0" />}
+              <span className="text-muted-foreground text-sm truncate">{post.author.handle}</span>
               <span className="text-muted-foreground text-sm">·</span>
-              <span className="text-muted-foreground text-sm flex-shrink-0">
-                {post.timestamp}
-              </span>
+              <span className="text-muted-foreground text-sm flex-shrink-0">{post.timestamp}</span>
             </div>
-            <button className="p-1 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors">
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="p-1 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+            >
               <MoreHorizontal size={16} />
             </button>
           </div>
@@ -93,23 +97,22 @@ const PostCard = ({ post, style }: PostCardProps) => {
           {/* Community & Type */}
           <div className="flex items-center gap-2 mb-2">
             {post.community && (
-              <span className="text-xs font-medium bg-secondary text-secondary-foreground px-2 py-0.5 rounded-lg">
+              <button
+                onClick={handleCommunityClick}
+                className="text-xs font-medium bg-secondary text-secondary-foreground px-2 py-0.5 rounded-lg hover:bg-primary/15 hover:text-primary transition-colors"
+              >
                 {post.community}
-              </span>
+              </button>
             )}
             {post.type !== "post" && (
-              <span
-                className={`text-xs font-medium px-2 py-0.5 rounded-lg capitalize ${typeColors[post.type]}`}
-              >
+              <span className={`text-xs font-medium px-2 py-0.5 rounded-lg capitalize ${typeColors[post.type]}`}>
                 {post.type}
               </span>
             )}
           </div>
 
           {/* Content */}
-          <p className="text-foreground text-sm leading-relaxed whitespace-pre-line mb-3">
-            {post.content}
-          </p>
+          <p className="text-foreground text-sm leading-relaxed whitespace-pre-line mb-3">{post.content}</p>
 
           {/* Media placeholder */}
           {post.media && (
@@ -124,10 +127,7 @@ const PostCard = ({ post, style }: PostCardProps) => {
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-3">
               {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs text-primary hover:text-primary-glow cursor-pointer transition-colors"
-                >
+                <span key={tag} className="text-xs text-primary hover:text-primary-glow cursor-pointer transition-colors">
                   #{tag}
                 </span>
               ))}
@@ -160,13 +160,19 @@ const PostCard = ({ post, style }: PostCardProps) => {
             </div>
 
             {/* Comments */}
-            <button className="flex items-center gap-1.5 p-1.5 text-muted-foreground hover:text-primary rounded-lg transition-colors">
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1.5 p-1.5 text-muted-foreground hover:text-primary rounded-lg transition-colors"
+            >
               <MessageCircle size={16} />
               <span className="text-xs">{formatNumber(post.comments)}</span>
             </button>
 
             {/* Repost */}
-            <button className="flex items-center gap-1.5 p-1.5 text-muted-foreground hover:text-success rounded-lg transition-colors">
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1.5 p-1.5 text-muted-foreground hover:text-success rounded-lg transition-colors"
+            >
               <Repeat2 size={16} />
               <span className="text-xs">{formatNumber(post.reposts)}</span>
             </button>
@@ -183,7 +189,10 @@ const PostCard = ({ post, style }: PostCardProps) => {
             </button>
 
             {/* Share */}
-            <button className="p-1.5 text-muted-foreground hover:text-primary rounded-lg transition-colors">
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="p-1.5 text-muted-foreground hover:text-primary rounded-lg transition-colors"
+            >
               <Share size={16} />
             </button>
           </div>
