@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { Search, TrendingUp } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import TopBar from "@/components/layout/TopBar";
 import { trendingTopics, communities } from "@/data/mockData";
 
 const Explore = () => {
+  const navigate = useNavigate();
+
   const formatNumber = (n: number) => {
     if (n >= 1000) return `${(n / 1000).toFixed(0)}k`;
     return n.toString();
@@ -52,9 +55,10 @@ const Explore = () => {
         <h2 className="font-display font-bold text-foreground mb-3">Discover Communities</h2>
         <div className="space-y-2">
           {communities.map((c, i) => (
-            <div
+            <button
               key={c.id}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-card hover:bg-card-hover border border-border transition-colors cursor-pointer"
+              onClick={() => navigate(`/community/${c.id}`)}
+              className="flex items-center gap-3 w-full p-3 rounded-2xl bg-card hover:bg-card-hover border border-border transition-colors cursor-pointer text-left"
               style={{ animation: `fade-up 0.4s ease-out ${(i + 5) * 0.05}s both` }}
             >
               <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-lg" style={{ background: `${c.color}20` }}>
@@ -69,10 +73,10 @@ const Explore = () => {
                 {c.isJoined ? (
                   <span className="text-xs font-medium text-success">Joined</span>
                 ) : (
-                  <button className="text-xs font-medium text-primary">Join</button>
+                  <span className="text-xs font-medium text-primary">Join</span>
                 )}
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </section>
