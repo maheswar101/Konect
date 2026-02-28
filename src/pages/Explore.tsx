@@ -1,0 +1,83 @@
+import { Search, TrendingUp } from "lucide-react";
+import AppLayout from "@/components/layout/AppLayout";
+import TopBar from "@/components/layout/TopBar";
+import { trendingTopics, communities } from "@/data/mockData";
+
+const Explore = () => {
+  const formatNumber = (n: number) => {
+    if (n >= 1000) return `${(n / 1000).toFixed(0)}k`;
+    return n.toString();
+  };
+
+  return (
+    <AppLayout>
+      <TopBar title="Explore" />
+
+      {/* Search */}
+      <div className="px-4 py-3">
+        <div className="flex items-center gap-3 bg-secondary rounded-2xl px-4 py-3">
+          <Search size={18} className="text-muted-foreground" />
+          <input
+            placeholder="Search topics, people, communities..."
+            className="bg-transparent text-foreground text-sm placeholder:text-muted-foreground outline-none flex-1"
+          />
+        </div>
+      </div>
+
+      {/* Trending */}
+      <section className="px-4 py-2">
+        <div className="flex items-center gap-2 mb-3">
+          <TrendingUp size={18} className="text-primary" />
+          <h2 className="font-display font-bold text-foreground">Trending Topics</h2>
+        </div>
+        <div className="space-y-2">
+          {trendingTopics.map((topic, i) => (
+            <div
+              key={topic.id}
+              className="flex items-center gap-4 p-3 rounded-2xl bg-card hover:bg-card-hover border border-border transition-colors cursor-pointer"
+              style={{ animation: `fade-up 0.4s ease-out ${i * 0.05}s both` }}
+            >
+              <span className="text-lg font-bold text-muted-foreground w-6">{i + 1}</span>
+              <div className="flex-1">
+                <p className="font-semibold text-foreground text-sm">{topic.name}</p>
+                <p className="text-xs text-muted-foreground">{formatNumber(topic.posts)} posts · {topic.category}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Communities */}
+      <section className="px-4 py-4">
+        <h2 className="font-display font-bold text-foreground mb-3">Discover Communities</h2>
+        <div className="space-y-2">
+          {communities.map((c, i) => (
+            <div
+              key={c.id}
+              className="flex items-center gap-3 p-3 rounded-2xl bg-card hover:bg-card-hover border border-border transition-colors cursor-pointer"
+              style={{ animation: `fade-up 0.4s ease-out ${(i + 5) * 0.05}s both` }}
+            >
+              <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-lg" style={{ background: `${c.color}20` }}>
+                {c.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-foreground text-sm">{c.name}</p>
+                <p className="text-xs text-muted-foreground truncate">{c.description}</p>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <p className="text-xs text-muted-foreground">{formatNumber(c.members)}</p>
+                {c.isJoined ? (
+                  <span className="text-xs font-medium text-success">Joined</span>
+                ) : (
+                  <button className="text-xs font-medium text-primary">Join</button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </AppLayout>
+  );
+};
+
+export default Explore;
