@@ -3,17 +3,42 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Users, Clock, Shield, ChevronDown, ChevronUp, Plus } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import PostCard from "@/components/feed/PostCard";
-import { communities, mockPosts } from "@/data/mockData";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { useCommunity, useCommunityPosts, useJoinCommunity } from "@/hooks/useCommunities";
 
 const CommunityDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const community = communities.find((c) => c.id === id);
-  const [joined, setJoined] = useState(community?.isJoined ?? false);
   const [showRules, setShowRules] = useState(false);
   const [activeTab, setActiveTab] = useState<"hot" | "new" | "top">("hot");
 
-  if (!community) {
+  const sortBy = activeTab === "hot" ? "trending" : activeTab === "new" ? "recent" : "top";
+  const { data: community, isLoading: loadingCommunity, error: communityError } = useCommunity(id || "");
+  const { data: communityPosts, isLoading: loadingPosts } = useCommunityPosts(id || "", sortBy);
+  const joinCommunityMutation = useJoinCommunity();
+
+  const formatNumber = (n: number) => {
+    if (n >= 1000) return `${(n / 1000).toFixed(0)}k`;
+    return n.toString();
+  };
+
+  const tabs = [
+    { id: "hot" as const, label: "Hot" },
+    { id: "new" as const, label: "New" },
+    { id: "top" as const, label: "Top" },
+  ];
+
+  if (loadingCommunity) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <LoadingSpinner text="Loading community..." />
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (communityError || !community) {
     return (
       <AppLayout>
         <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
@@ -26,21 +51,12 @@ const CommunityDetail = () => {
     );
   }
 
-  const communityPosts = mockPosts.filter((p) => p.communityId === id);
-  const formatNumber = (n: number) => {
-    if (n >= 1000) return `${(n / 1000).toFixed(0)}k`;
-    return n.toString();
+  const handleJoinToggle = () => {
+    joinCommunityMutation.mutate({ id: community.id, isJoined: !!community.isJoined });
   };
-
-  const tabs = [
-    { id: "hot" as const, label: "Hot" },
-    { id: "new" as const, label: "New" },
-    { id: "top" as const, label: "Top" },
-  ];
 
   return (
     <AppLayout>
-      {/* Header */}
       <div className="sticky top-0 z-40 glass border-b border-border">
         <div className="flex items-center gap-3 px-4 py-3">
           <button
@@ -56,7 +72,6 @@ const CommunityDetail = () => {
         </div>
       </div>
 
-      {/* Banner */}
       <div
         className="h-24 relative"
         style={{ background: `linear-gradient(135deg, ${community.color}40, ${community.color}10)` }}
@@ -64,7 +79,6 @@ const CommunityDetail = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
       </div>
 
-      {/* Community Info */}
       <div className="px-4 -mt-6 relative z-10 pb-4">
         <div className="flex items-end justify-between mb-3">
           <div
@@ -74,14 +88,15 @@ const CommunityDetail = () => {
             {community.icon}
           </div>
           <button
-            onClick={() => setJoined(!joined)}
+            onClick={handleJoinToggle}
+            disabled={joinCommunityMutation.isPending}
             className={`px-5 py-2 rounded-2xl text-sm font-semibold transition-colors ${
-              joined
+              community.isJoined
                 ? "bg-secondary text-foreground border border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
                 : "bg-primary text-primary-foreground hover:bg-primary/90"
             }`}
           >
-            {joined ? "Joined" : "Join"}
+            {community.isJoined ? "Joined" : "Join"}
           </button>
         </div>
 
@@ -102,7 +117,6 @@ const CommunityDetail = () => {
           </div>
         </div>
 
-        {/* Category badge */}
         {community.category && (
           <span className="text-xs font-medium bg-secondary text-secondary-foreground px-2.5 py-1 rounded-lg">
             {community.category}
@@ -110,7 +124,6 @@ const CommunityDetail = () => {
         )}
       </div>
 
-      {/* Rules (collapsible) */}
       {community.rules && community.rules.length > 0 && (
         <div className="px-4 pb-3">
           <button
@@ -140,7 +153,6 @@ const CommunityDetail = () => {
         </div>
       )}
 
-      {/* Sort tabs */}
       <div className="flex border-b border-border px-4">
         {tabs.map((tab) => (
           <button
@@ -158,10 +170,9 @@ const CommunityDetail = () => {
         ))}
       </div>
 
-      {/* Create post button */}
       <div className="px-4 py-3">
         <button
-          onClick={() => navigate("/create")}
+          onClick={() => navigate("/create", { state: { communityId: community.id } })}
           className="flex items-center gap-3 w-full p-3 rounded-2xl bg-card border border-border hover:bg-card-hover transition-colors"
         >
           <div className="w-8 h-8 rounded-xl bg-primary/20 text-primary flex items-center justify-center">
@@ -171,8 +182,11 @@ const CommunityDetail = () => {
         </button>
       </div>
 
-      {/* Posts */}
-      {communityPosts.length > 0 ? (
+      {loadingPosts ? (
+        <div className="flex items-center justify-center py-12">
+          <LoadingSpinner size="sm" text="Loading posts..." />
+        </div>
+      ) : communityPosts && communityPosts.length > 0 ? (
         communityPosts.map((post, i) => (
           <PostCard
             key={post.id}

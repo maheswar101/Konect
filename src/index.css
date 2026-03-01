@@ -96,7 +96,7 @@
 
   .glass {
     @apply backdrop-blur-xl;
-    background: hsl(225 14% 9% / 0.8);
+    background: hsl(225 14% 9% / 0.85);
   }
 
   .scrollbar-hide {
@@ -121,4 +121,29 @@
 @keyframes slide-in-bottom {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    hsl(205 100% 55% / 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }

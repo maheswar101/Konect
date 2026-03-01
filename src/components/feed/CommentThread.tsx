@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { ArrowBigUp, ArrowBigDown, MessageCircle, MoreHorizontal, Shield } from "lucide-react";
-import { Comment } from "@/data/mockData";
+import { Comment } from "@/types/social";
+import { useCreateComment, useVoteComment } from "@/hooks/useComments";
+import { toast } from "sonner";
 
 interface CommentThreadProps {
   comment: Comment;
@@ -14,18 +16,53 @@ const CommentThread = ({ comment, depth, style }: CommentThreadProps) => {
   const [upvotes, setUpvotes] = useState(comment.upvotes);
   const [downvotes, setDownvotes] = useState(comment.downvotes);
   const [showReply, setShowReply] = useState(false);
+  const [replyText, setReplyText] = useState("");
   const [collapsed, setCollapsed] = useState(false);
+  const voteCommentMutation = useVoteComment();
+  const createCommentMutation = useCreateComment();
 
-  const handleUpvote = () => {
+  const handleUpvote = async () => {
     if (isDownvoted) { setDownvotes(d => d - 1); setIsDownvoted(false); }
+    const next = !isUpvoted;
     setUpvotes(u => isUpvoted ? u - 1 : u + 1);
-    setIsUpvoted(!isUpvoted);
+    setIsUpvoted(next);
+    try {
+      await voteCommentMutation.mutateAsync({ id: comment.id, type: "upvote", postId: comment.postId });
+    } catch (error) {
+      setUpvotes(u => next ? u - 1 : u + 1);
+      setIsUpvoted(!next);
+      toast.error("Failed to update vote");
+    }
   };
 
-  const handleDownvote = () => {
+  const handleDownvote = async () => {
     if (isUpvoted) { setUpvotes(u => u - 1); setIsUpvoted(false); }
+    const next = !isDownvoted;
     setDownvotes(d => isDownvoted ? d - 1 : d + 1);
-    setIsDownvoted(!isDownvoted);
+    setIsDownvoted(next);
+    try {
+      await voteCommentMutation.mutateAsync({ id: comment.id, type: "downvote", postId: comment.postId });
+    } catch (error) {
+      setDownvotes(d => next ? d - 1 : d + 1);
+      setIsDownvoted(!next);
+      toast.error("Failed to update vote");
+    }
+  };
+
+  const handleReplySubmit = async () => {
+    const content = replyText.trim();
+    if (!content) return;
+    try {
+      await createCommentMutation.mutateAsync({
+        postId: comment.postId,
+        parentId: comment.id,
+        content,
+      });
+      setReplyText("");
+      setShowReply(false);
+    } catch (error) {
+      // Error handled by hook
+    }
   };
 
   const formatNumber = (n: number) => {
@@ -115,11 +152,16 @@ const CommentThread = ({ comment, depth, style }: CommentThreadProps) => {
             {showReply && (
               <div className="ml-9 mt-2 flex items-center gap-2">
                 <input
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
                   placeholder="Write a reply..."
                   className="flex-1 bg-secondary rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-1 focus:ring-primary"
                   autoFocus
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") setShowReply(false);
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleReplySubmit();
+                    }
                     if (e.key === "Escape") setShowReply(false);
                   }}
                 />
