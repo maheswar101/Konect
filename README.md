@@ -1,4 +1,4 @@
-# Nexus - Production-Ready Social Media Platform
+# Konect - Production-Ready Social Media Platform
 
 A modern, feature-rich social media application with **real-time capabilities**, **dynamic data**, and **production-ready architecture**.
 

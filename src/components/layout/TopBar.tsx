@@ -1,4 +1,4 @@
-import { Bell, Zap, LogOut, Settings } from "lucide-react";
+import { Bell, Zap, LogOut, Settings, Moon, Sun } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,15 +12,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useUnreadCount } from "@/hooks/useNotifications";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface TopBarProps {
   title?: string;
 }
 
-const TopBar = ({ title = "Nexus" }: TopBarProps) => {
+const TopBar = ({ title = "Konect" }: TopBarProps) => {
   const navigate = useNavigate();
   const { user, isAuthenticated, signOut } = useAuth();
   const { data: unreadCount = 0 } = useUnreadCount(isAuthenticated);
+  const { theme, toggleTheme } = useTheme();
 
   const handleSignOut = () => {
     signOut();
@@ -40,6 +42,13 @@ const TopBar = ({ title = "Nexus" }: TopBarProps) => {
           {title}
         </h1>
         <div className="flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all hover:scale-105"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
           {isAuthenticated ? (
             <>
               <button

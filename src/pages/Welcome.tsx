@@ -47,7 +47,7 @@ const Welcome = () => {
             <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-2xl shadow-primary/50 animate-pulse-glow">
               <Zap className="w-9 h-9 text-white" fill="white" />
             </div>
-            <h1 className="text-6xl font-bold font-display text-gradient">Nexus</h1>
+            <h1 className="text-6xl font-bold font-display text-gradient">Konect</h1>
           </div>
           
           <p className="text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
