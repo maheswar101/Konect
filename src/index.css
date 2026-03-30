@@ -74,9 +74,9 @@
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 0 84% 55%;
-    --primary-foreground: 0 0% 6%;
-    --primary-glow: 0 90% 65%;
+    --primary: 219 79% 66%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 219 85% 74%;
 
     --secondary: 0 0% 14%;
     --secondary-foreground: 0 0% 82%;
