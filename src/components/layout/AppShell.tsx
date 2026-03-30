@@ -42,17 +42,26 @@ const AppShell = ({ children, title }: AppShellProps) => {
               {title || "MedBuddy"}
             </h1>
           </div>
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? (
-              <Sun className="w-4 h-4 text-warning" />
-            ) : (
-              <Moon className="w-4 h-4 text-muted-foreground" />
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-4 h-4 text-warning" />
+              ) : (
+                <Moon className="w-4 h-4 text-muted-foreground" />
+              )}
+            </button>
+            <button
+              onClick={handleLogout}
+              className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+              aria-label="Logout"
+            >
+              <LogOut className="w-4 h-4 text-muted-foreground" />
+            </button>
+          </div>
         </div>
       </header>
 
