@@ -8,13 +8,13 @@ interface ThemeContextType {
   toggleTheme: () => void;
 }
 
-const STORAGE_KEY = "konect_theme";
+const STORAGE_KEY = "medbuddy_theme";
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored === "light" || stored === "dark" ? stored : "dark";
+    return stored === "dark" ? "dark" : "light";
   });
 
   useEffect(() => {
@@ -42,4 +42,3 @@ export const useTheme = () => {
   }
   return context;
 };
-
