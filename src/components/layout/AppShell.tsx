@@ -1,7 +1,8 @@
 import { ReactNode } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Home, ClipboardList, MessageCircle, BarChart3, Leaf, Sun, Moon } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, ClipboardList, MessageCircle, BarChart3, Leaf, Sun, Moon, LogOut } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 
 interface AppShellProps {
@@ -20,7 +21,14 @@ const navItems = [
 
 const AppShell = ({ children, title }: AppShellProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { student, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -33,17 +41,26 @@ const AppShell = ({ children, title }: AppShellProps) => {
               {title || "MedBuddy"}
             </h1>
           </div>
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? (
-              <Sun className="w-4 h-4 text-warning" />
-            ) : (
-              <Moon className="w-4 h-4 text-muted-foreground" />
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-4 h-4 text-warning" />
+              ) : (
+                <Moon className="w-4 h-4 text-muted-foreground" />
+              )}
+            </button>
+            <button
+              onClick={handleLogout}
+              className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+              aria-label="Logout"
+            >
+              <LogOut className="w-4 h-4 text-muted-foreground" />
+            </button>
+          </div>
         </div>
       </header>
 
