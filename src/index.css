@@ -53,11 +53,11 @@
     --sidebar-border: 220 13% 86%;
     --sidebar-ring: 219 79% 66%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(0 84% 48%), hsl(0 72% 36%));
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(0 0% 96%));
-    --gradient-glow: radial-gradient(ellipse at 50% 0%, hsl(0 84% 48% / 0.15), transparent 60%);
-    --shadow-glow: 0 0 30px -5px hsl(0 84% 48% / 0.3);
-    --shadow-card: 0 4px 24px -4px hsl(0 0% 0% / 0.2);
+    --gradient-primary: linear-gradient(135deg, hsl(219 79% 66%), hsl(219 60% 50%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(220 14% 96%));
+    --gradient-glow: radial-gradient(ellipse at 50% 0%, hsl(219 79% 66% / 0.15), transparent 60%);
+    --shadow-glow: 0 0 30px -5px hsl(219 79% 66% / 0.3);
+    --shadow-card: 0 4px 24px -4px hsl(220 10% 0% / 0.15);
 
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'Inter', sans-serif;
