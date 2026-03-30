@@ -1,7 +1,9 @@
 import { ReactNode } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Home, ClipboardList, MessageCircle, BarChart3, Leaf, Sun, Moon } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, ClipboardList, MessageCircle, BarChart3, Leaf, Sun, Moon, LogOut } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 interface AppShellProps {
