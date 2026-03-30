@@ -1,0 +1,178 @@
+import { AssessmentQuestion } from '@/types/health';
+
+export const assessmentQuestions: AssessmentQuestion[] = [
+  // Mental Health (1-5)
+  {
+    id: 1,
+    category: 'mental',
+    question: 'How would you rate your overall mood today?',
+    type: 'slider',
+    min: 1,
+    max: 10,
+    labels: { min: 'Very low', max: 'Excellent' },
+  },
+  {
+    id: 2,
+    category: 'mental',
+    question: 'How often do you feel overwhelmed or anxious?',
+    type: 'choice',
+    options: ['Rarely', 'Sometimes', 'Often', 'Almost always'],
+  },
+  {
+    id: 3,
+    category: 'mental',
+    question: 'How well can you concentrate on tasks?',
+    type: 'slider',
+    min: 1,
+    max: 10,
+    labels: { min: 'Very poorly', max: 'Very well' },
+  },
+  {
+    id: 4,
+    category: 'mental',
+    question: 'Do you feel socially connected and supported?',
+    type: 'choice',
+    options: ['Not at all', 'Somewhat', 'Mostly', 'Very much'],
+  },
+  {
+    id: 5,
+    category: 'mental',
+    question: 'How would you rate your self-confidence lately?',
+    type: 'slider',
+    min: 1,
+    max: 10,
+    labels: { min: 'Very low', max: 'Very high' },
+  },
+
+  // Sleep (6-9)
+  {
+    id: 6,
+    category: 'sleep',
+    question: 'How many hours of sleep do you get on average?',
+    type: 'choice',
+    options: ['Less than 4', '4-5 hours', '6-7 hours', '8+ hours'],
+  },
+  {
+    id: 7,
+    category: 'sleep',
+    question: 'How would you rate your sleep quality?',
+    type: 'slider',
+    min: 1,
+    max: 10,
+    labels: { min: 'Very poor', max: 'Excellent' },
+  },
+  {
+    id: 8,
+    category: 'sleep',
+    question: 'Do you have trouble falling or staying asleep?',
+    type: 'choice',
+    options: ['Never', 'Occasionally', 'Frequently', 'Every night'],
+  },
+  {
+    id: 9,
+    category: 'sleep',
+    question: 'Do you feel refreshed when you wake up?',
+    type: 'slider',
+    min: 1,
+    max: 10,
+    labels: { min: 'Never', max: 'Always' },
+  },
+
+  // Physical Health (10-13)
+  {
+    id: 10,
+    category: 'physical',
+    question: 'How many days per week do you exercise?',
+    type: 'choice',
+    options: ['0 days', '1-2 days', '3-4 days', '5+ days'],
+  },
+  {
+    id: 11,
+    category: 'physical',
+    question: 'How would you rate your energy levels?',
+    type: 'slider',
+    min: 1,
+    max: 10,
+    labels: { min: 'Exhausted', max: 'Energized' },
+  },
+  {
+    id: 12,
+    category: 'physical',
+    question: 'How balanced is your diet?',
+    type: 'choice',
+    options: ['Mostly junk food', 'Somewhat balanced', 'Mostly healthy', 'Very balanced'],
+  },
+  {
+    id: 13,
+    category: 'physical',
+    question: 'How often do you experience headaches or body pain?',
+    type: 'choice',
+    options: ['Rarely', 'Weekly', 'Multiple times a week', 'Daily'],
+  },
+
+  // Academic Pressure (14-17)
+  {
+    id: 14,
+    category: 'academic',
+    question: 'How stressed are you about exams and deadlines?',
+    type: 'slider',
+    min: 1,
+    max: 10,
+    labels: { min: 'Not at all', max: 'Extremely' },
+  },
+  {
+    id: 15,
+    category: 'academic',
+    question: 'How many hours do you study daily?',
+    type: 'choice',
+    options: ['Less than 1', '1-3 hours', '4-6 hours', '7+ hours'],
+  },
+  {
+    id: 16,
+    category: 'academic',
+    question: 'Do you take regular breaks while studying?',
+    type: 'choice',
+    options: ['Never', 'Sometimes', 'Usually', 'Always'],
+  },
+  {
+    id: 17,
+    category: 'academic',
+    question: 'How satisfied are you with your academic performance?',
+    type: 'slider',
+    min: 1,
+    max: 10,
+    labels: { min: 'Very unsatisfied', max: 'Very satisfied' },
+  },
+
+  // Lifestyle (18-21)
+  {
+    id: 18,
+    category: 'lifestyle',
+    question: 'How much screen time (non-study) do you have daily?',
+    type: 'choice',
+    options: ['Less than 2 hours', '2-4 hours', '4-6 hours', '6+ hours'],
+  },
+  {
+    id: 19,
+    category: 'lifestyle',
+    question: 'How often do you practice mindfulness or relaxation?',
+    type: 'choice',
+    options: ['Never', 'Rarely', 'Weekly', 'Daily'],
+  },
+  {
+    id: 20,
+    category: 'lifestyle',
+    question: 'How would you rate your work-life balance?',
+    type: 'slider',
+    min: 1,
+    max: 10,
+    labels: { min: 'No balance', max: 'Perfect balance' },
+  },
+  {
+    id: 21,
+    category: 'lifestyle',
+    question: 'How often do you engage in hobbies or fun activities?',
+    type: 'choice',
+    options: ['Never', 'Rarely', 'Weekly', 'Daily'],
+  },
+];
